@@ -65,5 +65,3 @@ graph TD;
     top["Top -> Node 2 (value)"] --> Node1["Node 1 (value)"]
     Node1 --> None["None"]
 ```
-
-

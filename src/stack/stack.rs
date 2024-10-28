@@ -10,6 +10,15 @@ struct Stack<T> {
 }
 
 impl<T> Stack<T> {
+
+    /// Constructs a new, empty `Stack<T>`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # #![allow(unused_mut)]
+    /// let mut stack: Stack<i32> = Stack::new();
+    /// ```
     pub fn new() -> Self {
         Stack { 
             head: None,
@@ -18,6 +27,13 @@ impl<T> Stack<T> {
         }
     }
 
+    /// Constructs a new, empty `Vec<T>` with at least the specified capacity.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut stack = Stack::with_capacity(10);
+    /// ```
     pub fn with_capacity(capacity: usize) -> Self {
         Stack {
             head: None,
@@ -26,6 +42,14 @@ impl<T> Stack<T> {
         }
     }
 
+    /// Adds an element to the top of the stack
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut stack = Stack::new();
+    /// stack.push(10);
+    /// ```
     pub fn push(&mut self, value: T) {
         if Self::is_full(&self) {
             panic!("Stack overflow!")
@@ -39,6 +63,17 @@ impl<T> Stack<T> {
         self.size += 1
     }
 
+    /// Removes the top element form the stack
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut stck = Stack::new();
+    /// stack.push(10);
+    ///
+    /// assert_eq!(stack.pop(), Some(10));
+    /// assert!(stack.is_empty())
+    /// ```
     pub fn pop(&mut self) -> Option<T> {
         self.head.take().map(|node| {
             self.head = node.next; // Move head to the next node
@@ -47,14 +82,41 @@ impl<T> Stack<T> {
         })
     }
 
+    /// View the top element without removing it from the stack
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut stack = Stack::new();
+    /// stack.push(10);
+    /// assert_eq!(stack.peek(), Some(10));
+    /// assert!(!stack.is_empty());
+    /// ```
     pub fn peek(&self) -> Option<&T> {
         self.head.as_deref().map(|node| &node.value)
     }
 
+    /// Checks if th stack has no elements
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut stack = Stack::new();
+    /// assert!(stack.is_empty());
+    /// ```
     pub fn is_empty(&self) -> bool {
         self.size == 0
     }
 
+    /// Check if the stack has reached maximum capacity
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut stack = Stack::with_capacity(1);
+    /// stack.push(10);
+    /// assert!(stack.is_full())
+    /// ```
     pub fn is_full(&self) -> bool {
         self.size >= self.capacity
     }
