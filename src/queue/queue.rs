@@ -62,3 +62,62 @@ impl<T> Queue<T> {
         self.front.as_deref().map(|node| &node.value)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_enqueue() {
+        let mut queue = Queue::new();
+        queue.enqueue(10);
+        queue.enqueue(20);
+        queue.enqueue(30);
+
+        assert_eq!(queue.peek(), Some(&10));
+        assert_eq!(queue.size, 3);
+    }
+
+    #[test]
+    fn test_dequeue() {
+        let mut queue = Queue::new();
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        assert_eq!(queue.dequeue(), Some(1));
+        assert_eq!(queue.dequeue(), Some(2));
+        assert_eq!(queue.dequeue(), Some(3));
+        assert_eq!(queue.dequeue(), None); // Queue should be empty now
+        assert!(queue.is_empty());
+    }
+
+    #[test]
+    fn test_peek() {
+        let mut queue = Queue::new();
+        queue.enqueue(5);
+        queue.enqueue(15);
+
+        // Peek at the top element without removing it
+        assert_eq!(queue.peek(), Some(&5));
+
+        // Peek again to ensure it hasn't changed
+        assert_eq!(queue.peek(), Some(&5));
+
+        // Pop it and then check peek again
+        queue.dequeue();
+        assert_eq!(queue.peek(), Some(&15));
+        assert_eq!(queue.size, 1)
+    }
+
+    #[test]
+    fn test_is_empty() {
+        let mut queue = Queue::new();
+
+        assert!(queue.is_empty());
+        queue.enqueue(5);
+        assert!(!queue.is_empty());
+        queue.dequeue();
+        assert!(queue.is_empty())
+    }
+}
