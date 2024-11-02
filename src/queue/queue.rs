@@ -16,7 +16,7 @@ impl<T> Queue<T> {
     /// ## Examples
     ///
     /// ```
-    /// # #![allow(unused_mut)]
+    /// #![allow(unused_mut)]
     /// let mut q: Queue<i32> = Queue::new();
     /// ```
     pub fn new() -> Self {
