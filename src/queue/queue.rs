@@ -10,6 +10,15 @@ struct Queue<T> {
 }
 
 impl<T> Queue<T> {
+
+    /// Constructs a new, empty `Queue<T>`.
+    ///
+    /// ## Examples
+    ///
+    /// ```
+    /// # #![allow(unused_mut)]
+    /// let mut q: Queue<i32> = Queue::new();
+    /// ```
     pub fn new() -> Self {
         Queue {
             front: None,
@@ -18,10 +27,26 @@ impl<T> Queue<T> {
         }
     }
 
+    /// Checks if th queue has no elements
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut q = Queue::new();
+    /// assert!(q.is_empty());
+    /// ```
     pub fn is_empty(&self) -> bool {
         self.size == 0
     }
 
+    /// Adds an element at the end of the queue
+    ///
+    /// ## Examples
+    ///
+    /// ```
+    /// let mut q = Queue::new();
+    /// q.enqueue(10);
+    /// ```
     pub fn enqueue(&mut self, value: T) {
         let new_node = Box::new(Node {
             value, 
@@ -45,6 +70,17 @@ impl<T> Queue<T> {
         self.size += 1;
     }
 
+    /// Removes and returns the element at the front of the queue
+    /// 
+    /// ## Examples
+    /// 
+    /// ```
+    /// let mut q = Queue::new()
+    /// q.enqueue(10)
+    /// 
+    /// assert_eq!(queue.dequeue(), Some(10));
+    /// assert!(queue.is_empty());
+    /// ```
     pub fn dequeue(&mut self) -> Option<T> {
         self.front.take().map(|old_front| {
             self.front = old_front.next;
@@ -58,8 +94,33 @@ impl<T> Queue<T> {
         })
     }
 
-    pub fn peek(&self) -> Option<&T> {
+    /// Returns the front element of the queue without removing it
+    /// 
+    /// ## Examples
+    /// 
+    /// ```
+    /// let mut q = Queue::new()
+    /// q.enqueue(10)
+    /// 
+    /// assert_eq!(queue.front(), Some(&5));
+    /// ```
+    pub fn front(&self) -> Option<&T> {
         self.front.as_deref().map(|node| &node.value)
+    }
+
+
+    /// Returns the element at the back of the queue without removing it 
+    /// 
+    /// ## Examples
+    /// 
+    /// ```
+    /// let mut q = Queue::new()
+    /// q.enqueue(10)
+    /// 
+    /// assert_eq!(queue.rear(), Some(&30));
+    /// ```
+    pub fn rear(&self) -> Option<&T> {
+        unsafe { self.back.as_ref().map(|node| &node.value) }
     }
 }
 
@@ -74,7 +135,7 @@ mod tests {
         queue.enqueue(20);
         queue.enqueue(30);
 
-        assert_eq!(queue.peek(), Some(&10));
+        assert_eq!(queue.front(), Some(&10));
         assert_eq!(queue.size, 3);
     }
 
@@ -93,20 +154,20 @@ mod tests {
     }
 
     #[test]
-    fn test_peek() {
+    fn test_front() {
         let mut queue = Queue::new();
         queue.enqueue(5);
         queue.enqueue(15);
 
         // Peek at the top element without removing it
-        assert_eq!(queue.peek(), Some(&5));
+        assert_eq!(queue.front(), Some(&5));
 
         // Peek again to ensure it hasn't changed
-        assert_eq!(queue.peek(), Some(&5));
+        assert_eq!(queue.front(), Some(&5));
 
         // Pop it and then check peek again
         queue.dequeue();
-        assert_eq!(queue.peek(), Some(&15));
+        assert_eq!(queue.front(), Some(&15));
         assert_eq!(queue.size, 1)
     }
 
@@ -119,5 +180,16 @@ mod tests {
         assert!(!queue.is_empty());
         queue.dequeue();
         assert!(queue.is_empty())
+    }
+
+    #[test]
+    fn test_rear() {
+        let mut queue = Queue::new();
+        queue.enqueue(10);
+        queue.enqueue(20);
+        queue.enqueue(30);
+
+        assert_eq!(queue.rear(), Some(&30));
+        assert_eq!(queue.size, 3);
     }
 }
